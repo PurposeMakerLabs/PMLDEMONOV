@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a1420">
+<title>PML | Product Governance & Daily Operations</title>
+<style>
+:root{
+  --navy:#0a1420;--slate:#0f1e2e;--panel:#122438;--panel2:#172d43;
+  --cyan:#22d3ee;--cyan2:#8beaf6;--white:#f4f8fb;--muted:#9aabbb;
+  --line:#294258;--green:#46c49a;--amber:#f0bd62;--red:#ef7777;
+  --ink:#14202c;--paper:#fff;--radius:13px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--navy);color:var(--white);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.shell{max-width:1500px;margin:auto;padding:24px}
+header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:18px 0 22px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:13px}
+.mark{width:42px;height:42px;border:1px solid var(--cyan);display:grid;place-items:center;color:var(--cyan);font-weight:800;letter-spacing:-1px;border-radius:9px}
+.eyebrow{font-size:10px;letter-spacing:2px;color:var(--cyan);font-weight:800;text-transform:uppercase}
+h1{font-size:21px;line-height:1.2;margin:3px 0 0;letter-spacing:.1px}
+.header-note{color:var(--muted);font-size:12px;text-align:right}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--white);padding:9px 13px;border-radius:8px;font-weight:650;font-size:12px}
+.btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn.primary{background:var(--cyan);color:#06131d;border-color:var(--cyan)}
+.btn.danger{border-color:#704044;color:#ffaaaa}
+.intro{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;padding:22px 0 17px}
+.intro h2{font-size:25px;margin:0 0 5px}
+.intro p{margin:0;color:var(--muted);max-width:760px}
+.statusline{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12px;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 18px}
+.metric{background:var(--slate);border:1px solid var(--line);padding:13px 15px;border-radius:11px}
+.metric small{display:block;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase}
+.metric strong{font-size:23px;display:block;margin-top:2px}
+.metric span{font-size:11px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:start}
+main{min-width:0}
+.section{background:var(--slate);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:13px;overflow:hidden}
+.section-head{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}
+.section-head h3{margin:0;font-size:14px}
+.section-head p{margin:2px 0 0;color:var(--muted);font-size:11px}
+.num{color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:1px}
+.section-body{padding:15px 16px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field.full{grid-column:1/-1}
+label{display:block;color:#c5d2dd;font-size:11px;font-weight:700;margin-bottom:5px}
+.hint{display:block;color:var(--muted);font-size:10px;font-weight:400;margin-top:2px}
+input,textarea,select{width:100%;background:#091522;border:1px solid #30485d;color:var(--white);border-radius:7px;padding:9px 10px;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #22d3ee20}
+textarea{min-height:74px;resize:vertical}
+textarea.tall{min-height:108px}
+input::placeholder,textarea::placeholder{color:#64788a}
+.gates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.gate{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;background:#0b1927;border:1px solid var(--line);border-radius:8px}
+.gate strong{font-size:12px;display:block}
+.gate small{font-size:10px;color:var(--muted);display:block}
+.gate select{width:125px;padding:7px;font-size:11px}
+aside{position:sticky;top:12px}
+.sidecard{background:var(--slate);border:1px solid var(--line);border-radius:var(--radius);padding:15px;margin-bottom:12px}
+.sidecard h3{font-size:13px;margin:0 0 12px}
+.score-wrap{display:flex;align-items:center;gap:14px}
+.score{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) var(--score,0%),#263c50 0);position:relative;flex:none}
+.score:before{content:"";position:absolute;inset:7px;background:var(--slate);border-radius:50%}
+.score b{position:relative;font-size:20px}
+.score-meta strong{display:block;font-size:13px}
+.score-meta span{color:var(--muted);font-size:11px}
+.progress{height:6px;background:#263c50;border-radius:9px;overflow:hidden;margin:12px 0 6px}
+.progress i{display:block;height:100%;width:0;background:var(--cyan);transition:width .2s}
+.small{font-size:11px;color:var(--muted)}
+.checklist{padding:0;margin:0;list-style:none}
+.checklist li{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #23394d;font-size:11px;color:#c2cfda}
+.checklist li:last-child{border:0}
+.check{color:var(--green);font-weight:900}
+.warn{color:var(--amber);font-weight:900}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.actions .btn{width:100%}
+.footer{color:#708397;font-size:10px;text-align:center;padding:18px 0 8px}
+.tag{display:inline-block;padding:3px 7px;border:1px solid var(--line);border-radius:20px;color:var(--cyan2);font-size:10px}
+.inline-note{padding:10px 12px;background:#0b1c2a;border-left:2px solid var(--cyan);border-radius:4px;color:#b7c6d2;font-size:11px;margin-top:10px}
+@media(max-width:980px){.layout{grid-template-columns:1fr}aside{position:static}.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.shell{padding:14px}.intro{display:block}.statusline{margin-top:12px}.fields,.gates{grid-template-columns:1fr}.header-note{display:none}.toolbar{justify-content:flex-start;margin-top:12px}header{align-items:flex-start;flex-direction:column}.metrics{gap:7px}.metric strong{font-size:20px}}
+@media print{
+ body{background:white;color:#111}.shell{max-width:none;padding:0}.section,.metric,.sidecard{background:white;color:#111;border:1px solid #bbb;break-inside:avoid}
+ .section-head{border-color:#ccc}.section-head p,.small,.metric span,.metric small,label,.gate small,.footer{color:#444}
+ input,textarea,select{background:white;color:#111;border:1px solid #aaa}
+ .toolbar,.actions,.statusline .dot{display:none!important}.layout{display:block}aside{position:static;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .score:before{background:white}.gate{background:white;border-color:#ccc}.inline-note{background:#f4f7f9;color:#222}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+  <div class="brand">
+    <div class="mark">PML</div>
+    <div><div class="eyebrow">PurposeMaker Labs · PPS-001</div><h1>Product Governance & Daily Operations</h1></div>
+  </div>
+  <div>
+    <div class="header-note">PROPRIETARY PRODUCT DEFINITION · VALIDATION · COMMERCIALIZATION</div>
+    <div class="toolbar" style="margin-top:9px">
+      <button class="btn" id="saveBtn">Save workspace</button>
+      <button class="btn" id="loadBtn">Load saved</button>
+      <button class="btn" id="exportBtn">Export JSON</button>
+      <button class="btn" id="printBtn">Print / PDF</button>
+      <button class="btn danger" id="resetBtn">Clear form</button>
+    </div>
+  </div>
+</header>
+
+<div class="intro">
+  <div>
+    <div class="eyebrow">Operating standard · Version 1.0</div>
+    <h2>Define it. Prove it. Productize it. Sell it.</h2>
+    <p>A reusable operating record for every PML proprietary product. Establish commercial purpose, customer fit, scope boundaries, completion evidence, minimum viable proof, and readiness before committing significant development resources.</p>
+  </div>
+  <div class="statusline"><span class="dot"></span><span id="saveStatus">Workspace ready · Changes are local until saved</span></div>
+</div>
+
+<div class="metrics">
+  <div class="metric"><small>Definition completeness</small><strong id="completionMetric">0%</strong><span>Required fields populated</span></div>
+  <div class="metric"><small>Readiness gates passed</small><strong id="passedMetric">0 / 10</strong><span>Evidence-based assessment</span></div>
+  <div class="metric"><small>Critical blockers</small><strong id="blockerMetric">10</strong><span>Failed or unvalidated gates</span></div>
+  <div class="metric"><small>Product status</small><strong id="statusMetric" style="font-size:17px">Not assessed</strong><span>Based on readiness gates</span></div>
+</div>
+
+<div class="layout">
+<main>
+  <section class="section">
+    <div class="section-head"><div><span class="num">00 / RECORD CONTROL</span><h3>Product identity and ownership</h3><p>Establish the record before defining the product.</p></div><span class="tag">Required</span></div>
+    <div class="section-body fields">
+      <div class="field"><label>Product / initiative name<input data-field="productName" placeholder="e.g. Revenue Intelligence OS™"></label></div>
+      <div class="field"><label>Product owner / accountable lead<input data-field="owner" placeholder="Name or role"></label></div>
+      <div class="field"><label>Product category<select data-field="category"><option value="">Select category</option><option>Business & Strategic Intelligence</option><option>AI Transformation & Automation</option><option>Revenue Intelligence Systems</option><option>Digital Assets / Blockchain / RWA</option><option>Fintech & Financial Infrastructure</option><option>Education / Certification</option><option>Research / Intelligence Reports</option><option>Other</option></select></label></div>
+      <div class="field"><label>Review date<input type="date" data-field="reviewDate"></label></div>
+      <div class="field"><label>Lifecycle stage<select data-field="stage"><option value="">Select stage</option><option>Concept</option><option>Defined</option><option>Prototype</option><option>MVP in development</option><option>Proof under validation</option><option>Commercial product</option><option>Scaling</option><option>Paused / Retired</option></select></label></div>
+      <div class="field"><label>Decision required today<input data-field="decisionToday" placeholder="The decision this review must resolve"></label></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><span class="num">01 / PRODUCT DEFINITION</span><h3>The six mandatory specifications</h3><p>Write for a qualified buyer and an accountable delivery team.</p></div><span class="tag">PPS-001</span></div>
+    <div class="section-body fields">
+      <div class="field full"><label>1. WHAT IT IS <span class="hint">Product, purpose, mechanism, architecture, functionality, inputs, outputs, and tangible deliverables.</span><textarea class="tall" data-field="whatItIs" placeholder="Define precisely what the customer is buying and what the product actually does."></textarea></div>
+      <div class="field full"><label>2. WHO IT IS FOR <span class="hint">Ideal customer, economic buyer, users, use cases, qualification criteria, and disqualifiers.</span><textarea data-field="whoFor" placeholder="Identify the buyer, decision authority, business context, and conditions required for success."></textarea></div>
+      <div class="field full"><label>3. WHAT IT IS NOT <span class="hint">Exclusions, limitations, unsupported capabilities, dependencies, and customer responsibilities.</span><textarea data-field="whatNot" placeholder="Define explicit boundaries. State what is excluded and what must not be promised."></textarea></div>
+      <div class="field full"><label>4. WHAT DOES DONE LOOK LIKE? <span class="hint">Deliverables, acceptance tests, quality thresholds, documentation, handover, and evidence.</span><textarea class="tall" data-field="doneLooksLike" placeholder="List observable, objectively verifiable completion conditions. Separate delivery completion from customer outcomes."></textarea></div>
+      <div class="field full"><label>5. WHAT IS THE SMALLEST VERSION THAT PROVES IT? <span class="hint">Minimum viable proof, not merely a mockup or presentation.</span><textarea class="tall" data-field="smallestProof" placeholder="Specify the smallest real-world test: scope, inputs, workflow, outputs, resources, timeline, cost, pass/fail criteria, and proof required."></textarea></div>
+      <div class="field full"><label>6. WHAT PROBLEM DOES IT SOLVE AND WHAT VALUE DOES IT CREATE? <span class="hint">Economic problem, cost of inaction, value mechanism, measurable impact, and purchase rationale.</span><textarea data-field="problemValue" placeholder="Describe the commercial problem, its consequences, why current alternatives fall short, and why a buyer would pay."></textarea></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><span class="num">02 / PRODUCT & DELIVERY SYSTEM</span><h3>Operating architecture</h3><p>Define how the promise becomes a repeatable deliverable.</p></div></div>
+    <div class="section-body fields">
+      <div class="field full"><label>Core components / modules<textarea data-field="components" placeholder="List the essential components and the role each performs."></textarea></div>
+      <div class="field"><label>Required customer inputs<textarea data-field="inputs" placeholder="Data, access, documents, decisions, personnel, approvals."></textarea></div>
+      <div class="field"><label>Outputs and deliverables<textarea data-field="outputs" placeholder="Reports, systems, models, workflows, training, integrations."></textarea></div>
+      <div class="field"><label>Delivery workflow<textarea data-field="workflow" placeholder="Sequence from qualification through delivery and handover."></textarea></div>
+      <div class="field"><label>Dependencies / third parties<textarea data-field="dependencies" placeholder="Platforms, APIs, vendors, licenses, data, specialists."></textarea></div>
+      <div class="field"><label>Quality assurance and controls<textarea data-field="qa" placeholder="Review, testing, security, sign-off, version control."></textarea></div>
+      <div class="field"><label>IP and ownership boundaries<textarea data-field="ip" placeholder="PML background IP, client-specific work, licenses, permitted reuse."></textarea></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><span class="num">03 / COMMERCIAL MODEL</span><h3>Monetization and delivery economics</h3><p>Pricing must reflect buyer value, scope, delivery effort, and risk.</p></div></div>
+    <div class="section-body fields">
+      <div class="field"><label>Primary monetization model<select data-field="model"><option value="">Select model</option><option>Fixed-fee project</option><option>Diagnostic / assessment</option><option>Subscription / recurring</option><option>License / IP</option><option>Training / certification</option><option>Retainer</option><option>Performance-based</option><option>Hybrid</option></select></label></div>
+      <div class="field"><label>Target price / range<input data-field="price" placeholder="e.g. $7,500–$15,000"></label></div>
+      <div class="field"><label>Estimated delivery cost<input data-field="deliveryCost" placeholder="Currency and amount"></label></div>
+      <div class="field"><label>Target gross margin<input data-field="margin" placeholder="e.g. 65%"></label></div>
+      <div class="field"><label>Delivery time / capacity<input data-field="deliveryTime" placeholder="e.g. 10 business days / 4 clients monthly"></label></div>
+      <div class="field"><label>Recurring / expansion opportunity<input data-field="recurring" placeholder="Renewal, support, licensing, additional modules"></label></div>
+      <div class="field full"><label>Client tiers and scope differences<textarea data-field="tiers" placeholder="Define each tier by buyer, scope, deliverables, service level, exclusions, and price."></textarea></div>
+      <div class="field full"><label>Go-to-market and acquisition path<textarea data-field="gtm" placeholder="Channels, proof assets, offer, qualification, sales process, and next commercial action."></textarea></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><span class="num">04 / MINIMUM VIABLE PROOF</span><h3>Proof plan and investment discipline</h3><p>Specify the test that earns the right to invest further.</p></div></div>
+    <div class="section-body fields">
+      <div class="field"><label>Proof environment<input data-field="proofEnvironment" placeholder="Pilot client, internal test, sandbox, live workflow"></label></div>
+      <div class="field"><label>Proof owner<input data-field="proofOwner" placeholder="Accountable person"></label></div>
+      <div class="field"><label>Proof start date<input type="date" data-field="proofStart"></label></div>
+      <div class="field"><label>Proof target date<input type="date" data-field="proofEnd"></label></div>
+      <div class="field full"><label>Pass criteria<textarea data-field="passCriteria" placeholder="Quantified or objectively testable conditions that constitute a pass."></textarea></div>
+      <div class="field full"><label>Fail criteria / stop conditions<textarea data-field="failCriteria" placeholder="Conditions that trigger redesign, pause, or termination."></textarea></div>
+      <div class="field full"><label>Evidence captured<textarea data-field="evidence" placeholder="Test results, customer feedback, time saved, accuracy, conversion, cost, acceptance sign-off."></textarea></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><span class="num">05 / READINESS CONTROL</span><h3>Ten mandatory product readiness gates</h3><p>Set each gate to Pass only when supporting evidence exists.</p></div><span class="tag">Evidence required</span></div>
+    <div class="section-body">
+      <div class="gates" id="gates">
+        <div class="gate"><div><strong>01 · Problem validated</strong><small>Material problem and consequences evidenced</small></div><select data-gate="Problem validated"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+        <div class="gate"><div><strong>02 · Buyer identified</strong><small>Economic buyer and qualification criteria defined</small></div><select data-gate="Buyer identified"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+        <div class="gate"><div><strong>03 · Value proposition</strong><small>Defensible value and purchase rationale</small></div><select data-gate="Value proposition"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+        <div class="gate"><div><strong>04 · Scope and exclusions</strong><small>Inclusions, boundaries, and dependencies clear</small></div><select data-gate="Scope and exclusions"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+        <div class="gate"><div><strong>05 · Deliverables defined</strong><small>Outputs and customer responsibilities specified</small></div><select data-gate="Deliverables defined"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+        <div class="gate"><div><strong>06 · Acceptance criteria</strong><small>Objective completion and QA tests established</small></div><select data-gate="Acceptance criteria"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+        <div class="gate"><div><strong>07 · Minimum proof</strong><small>Working proof and validation evidence captured</small></div><select data-gate="Minimum proof"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+        <div class="gate"><div><strong>08 · Delivery repeatability</strong><small>Workflow, roles, and dependencies understood</small></div><select data-gate="Delivery repeatability"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+        <div class="gate"><div><strong>09 · Unit economics</strong><small>Price, cost, margin, and capacity assessed</small></div><select data-gate="Unit economics"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+        <div class="gate"><div><strong>10 · Commercial pathway</strong><small>Acquisition, sales, and onboarding defined</small></div><select data-gate="Commercial pathway"><option>Not validated</option><option>Pass</option><option>Fail</option></select></div>
+      </div>
+      <div class="inline-note">Governance rule: a product must not be labelled commercially ready while any critical gate is failed or unvalidated. A high percentage score does not override a failed critical gate.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><span class="num">06 / DAILY EXECUTION</span><h3>Today's operating priorities</h3><p>Convert the product assessment into accountable action.</p></div></div>
+    <div class="section-body fields">
+      <div class="field full"><label>Today's highest-value action<textarea data-field="todayAction" placeholder="One action that most advances validation, revenue, risk reduction, or delivery."></textarea></div>
+      <div class="field"><label>Action owner<input data-field="actionOwner" placeholder="Accountable person"></label></div>
+      <div class="field"><label>Due date<input type="date" data-field="actionDue"></label></div>
+      <div class="field full"><label>Blockers / decisions required<textarea data-field="blockers" placeholder="What is preventing progress? Who must decide or provide something?"></textarea></div>
+      <div class="field full"><label>End-of-day result / evidence<textarea data-field="eodResult" placeholder="What was completed? What evidence exists? What remains open?"></textarea></div>
+      <div class="field full"><label>Next review / next decision<textarea data-field="nextReview" placeholder="Next review date, decision required, and trigger for escalation."></textarea></div>
+    </div>
+  </section>
+</main>
+
+<aside>
+  <div class="sidecard">
+    <h3>Product readiness assessment</h3>
+    <div class="score-wrap">
+      <div class="score" id="scoreCircle"><b id="scoreValue">0%</b></div>
+      <div class="score-meta"><strong id="scoreLabel">Not assessed</strong><span id="scoreSub">No gates passed yet</span></div>
+    </div>
+    <div class="progress"><i id="progressBar"></i></div>
+    <div class="small" id="progressText">0 of 10 gates passed</div>
+  </div>
+  <div class="sidecard">
+    <h3>Governance decision</h3>
+    <ul class="checklist" id="decisionList">
+      <li><span class="warn">!</span><span>Complete the product definition.</span></li>
+      <li><span class="warn">!</span><span>Validate every critical gate.</span></li>
+      <li><span class="warn">!</span><span>Capture proof before scaling.</span></li>
+    </ul>
+    <div class="inline-note" id="decisionNote">Current disposition: NOT ASSESSED. Do not represent the product as commercially ready.</div>
+  </div>
+  <div class="sidecard">
+    <h3>Daily operating discipline</h3>
+    <ul class="checklist">
+      <li><span class="check">✓</span><span>Prioritize evidence over activity.</span></li>
+      <li><span class="check">✓</span><span>Resolve the highest-impact blocker.</span></li>
+      <li><span class="check">✓</span><span>Protect scope and delivery margin.</span></li>
+      <li><span class="check">✓</span><span>Record decisions and accountable owners.</span></li>
+      <li><span class="check">✓</span><span>Do not scale an unproven offer.</span></li>
+    </ul>
+  </div>
+  <div class="sidecard">
+    <h3>Workspace actions</h3>
+    <div class="actions">
+      <button class="btn primary" id="saveBtn2">Save record</button>
+      <button class="btn" id="exportBtn2">Export JSON</button>
+      <button class="btn" id="printBtn2">Print / PDF</button>
+      <button class="btn" id="copySummaryBtn">Copy summary</button>
+    </div>
+    <p class="small" style="margin:11px 0 0">Data is stored in this browser only when you select Save. Export JSON to retain a portable record or transfer it to another system.</p>
+  </div>
+</aside>
+</div>
+<div class="footer">PURPOSEMAKER LABS · PPS-001 · INTERNAL OPERATING TEMPLATE · CONFIDENTIAL WORK PRODUCT</div>
+</div>
+<script>
+(()=>{
+ const fields=[...document.querySelectorAll('[data-field]')];
+ const gates=[...document.querySelectorAll('[data-gate]')];
+ const required=['productName','owner','category','stage','whatItIs','whoFor','whatNot','doneLooksLike','smallestProof','problemValue','components','outputs','workflow','model','price','passCriteria','todayAction','actionOwner'];
+ const $=id=>document.getElementById(id);
+ const getData=()=>{
+   const data={};
+   fields.forEach(el=>data[el.dataset.field]=el.value);
+   data.gates={};gates.forEach(el=>data.gates[el.dataset.gate]=el.value);
+   data.updatedAt=new Date().toISOString();
+   return data;
+ };
+ const setData=data=>{
+   if(!data)return;
+   fields.forEach(el=>{if(data[el.dataset.field]!==undefined)el.value=data[el.dataset.field]});
+   gates.forEach(el=>{if(data.gates&&data.gates[el.dataset.gate])el.value=data.gates[el.dataset.gate]});
+   update();
+ };
+ const filled=key=>String(fields.find(el=>el.dataset.field===key)?.value||'').trim().length>0;
+ function update(){
+   const passed=gates.filter(g=>g.value==='Pass').length;
+   const failed=gates.filter(g=>g.value==='Fail').length;
+   const open=gates.length-passed-failed;
+   const pct=Math.round(passed/gates.length*100);
+   const complete=Math.round(required.filter(filled).length/required.length*100);
+   $('completionMetric').textContent=complete+'%';
+   $('passedMetric').textContent=passed+' / 10';
+   $('blockerMetric').textContent=failed+open;
+   $('scoreValue').textContent=pct+'%';
+   $('scoreCircle').style.setProperty('--score',pct+'%');
+   $('progressBar').style.width=pct+'%';
+   $('progressText').textContent=passed+' of 10 gates passed · '+failed+' failed · '+open+' unvalidated';
+   let status='Not assessed',sub='No gates passed yet',note='Current disposition: NOT ASSESSED. Do not represent the product as commercially ready.';
+   if(passed===10&&failed===0){status='Gate-complete';sub='All ten gates marked pass';note='All gates are marked PASS. Confirm supporting evidence and delivery readiness before authorizing commercial release.'}
+   else if(failed>0){status='Blocked';sub=failed+' failed gate(s)';note='Current disposition: BLOCKED. Resolve failed gates and document evidence before proceeding.'}
+   else if(passed>0){status='In validation';sub=open+' gate(s) remain';note='Current disposition: IN VALIDATION. Continue testing. Do not classify as commercially ready.'}
+   $('statusMetric').textContent=status;
+   $('scoreLabel').textContent=status;
+   $('scoreSub').textContent=sub;
+   $('decisionNote').textContent=note;
+   const missing=required.filter(k=>!filled(k));
+   const labels={productName:'Product identity',owner:'Accountable owner',category:'Product category',stage:'Lifecycle stage',whatItIs:'What it is',whoFor:'Who it is for',whatNot:'What it is not',doneLooksLike:'Completion criteria',smallestProof:'Minimum viable proof',problemValue:'Problem and value',components:'Product components',outputs:'Deliverables',workflow:'Delivery workflow',model:'Commercial model',price:'Pricing',passCriteria:'Proof pass criteria',todayAction:"Today's highest-value action",actionOwner:'Action owner'};
+   const items=[];
+   if(missing.length)items.push(...missing.slice(0,4).map(k=>({ok:false,text:'Complete: '+labels[k]})));
+   if(failed)items.push({ok:false,text:'Resolve '+failed+' failed readiness gate(s)'});
+   if(open)items.push({ok:false,text:'Validate '+open+' outstanding readiness gate(s)'});
+   if(!filled('evidence'))items.push({ok:false,text:'Capture proof evidence'});
+   if(!filled('eodResult'))items.push({ok:false,text:'Record end-of-day outcome'});
+   if(!items.length)items.push({ok:true,text:'Definition and gate checks complete. Confirm evidence quality and approve next stage.'});
+   $('decisionList').innerHTML=items.slice(0,7).map(x=>`<li><span class="${x.ok?'check':'warn'}">${x.ok?'✓':'!'}</span><span>${x.text}</span></li>`).join('');
+ }
+ function save(){
+   try{localStorage.setItem('pml_pps001_workspace',JSON.stringify(getData()));$('saveStatus').textContent='Saved locally · '+new Date().toLocaleTimeString();}catch(e){$('saveStatus').textContent='Unable to save in this browser.'}
+ }
+ function load(){
+   try{const raw=localStorage.getItem('pml_pps001_workspace');if(!raw){$('saveStatus').textContent='No saved record found.';return}setData(JSON.parse(raw));$('saveStatus').textContent='Saved record loaded.'}catch(e){$('saveStatus').textContent='Unable to load saved record.'}
+ }
+ function exportJSON(){
+   const blob=new Blob([JSON.stringify(getData(),null,2)],{type:'application/json'});
+   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='PML_PPS-001_'+(getData().productName||'Product_Record').replace(/[^a-z0-9-_]/gi,'_')+'.json';a.click();URL.revokeObjectURL(a.href);
+ }
+ function summary(){
+   const d=getData();const passed=gates.filter(g=>g.value==='Pass').length;
+   return `PURPOSEMAKER LABS | PPS-001 PRODUCT REVIEW\nProduct: ${d.productName||'Not specified'}\nOwner: ${d.owner||'Not specified'}\nStage: ${d.stage||'Not specified'}\nReadiness gates passed: ${passed}/10\nDecision required: ${d.decisionToday||'Not specified'}\nToday's priority: ${d.todayAction||'Not specified'}\nOwner / due: ${d.actionOwner||'Not specified'} / ${d.actionDue||'Not specified'}\nBlockers: ${d.blockers||'None recorded'}\nEnd-of-day result: ${d.eodResult||'Pending'}\n\nGovernance note: Gate status is self-reported and requires supporting evidence.`;
+ }
+ fields.forEach(el=>el.addEventListener('input',update));
+ gates.forEach(el=>el.addEventListener('change',update));
+ ['saveBtn','saveBtn2'].forEach(id=>$(id).addEventListener('click',save));
+ ['loadBtn'].forEach(id=>$(id).addEventListener('click',load));
+ ['exportBtn','exportBtn2'].forEach(id=>$(id).addEventListener('click',exportJSON));
+ ['printBtn','printBtn2'].forEach(id=>$(id).addEventListener('click',()=>window.print()));
+ $('copySummaryBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(summary());$('saveStatus').textContent='Executive summary copied.'}catch(e){$('saveStatus').textContent='Clipboard unavailable. Use Export JSON or Print.'}});
+ $('resetBtn').addEventListener('click',()=>{if(confirm('Clear all fields in this workspace? This does not delete a previously saved browser record.')){fields.forEach(el=>el.value='');gates.forEach(el=>el.value='Not validated');update();$('saveStatus').textContent='Form cleared. Save to overwrite the previous record.'}});
+ const today=new Date().toISOString().slice(0,10);
+ const dateField=fields.find(el=>el.dataset.field==='reviewDate');if(dateField)dateField.value=today;
+ update();
+})();
+</script>
+</body>
+</html>
